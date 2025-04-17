@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perhitungan Masa Kerja PNS by Adib (BKD Sidoarjo)</title>
+    <title>Kalkulator Masa Kerja PNS by Adib (BKD Sidoarjo)</title>
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -43,13 +43,6 @@
             animation: colorChange 5s infinite;
         }
         
-        .subtitle {
-            font-size: 16px;
-            margin-top: 5px;
-            font-weight: normal;
-            opacity: 0.9;
-        }
-        
         .form-container {
             background-color: white;
             padding: 25px;
@@ -80,11 +73,6 @@
             transition: border 0.3s;
         }
         
-        input[type="date"]:focus, input[type="number"]:focus, input[type="text"]:focus, select:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-        
         button {
             background-color: #3498db;
             color: white;
@@ -96,10 +84,6 @@
             margin-top: 10px;
             transition: background-color 0.3s;
             font-weight: bold;
-        }
-        
-        button:hover {
-            background-color: #2980b9;
         }
         
         .result {
@@ -120,64 +104,6 @@
             background-color: #f9f9f9;
             position: relative;
             animation: fadeIn 0.5s ease-out;
-        }
-        
-        .remove-period {
-            background-color: #e74c3c;
-            margin-left: 10px;
-            padding: 8px 15px;
-        }
-        
-        .remove-period:hover {
-            background-color: #c0392b;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: #3498db;
-            color: white;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        
-        .highlight {
-            font-size: 18px;
-            color: #2c3e50;
-            font-weight: bold;
-            background-color: #eaf2f8;
-            padding: 10px;
-            border-radius: 4px;
-            margin: 15px 0;
-        }
-        
-        .info-box {
-            background-color: #eaf2f8;
-            border-left: 4px solid #3498db;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 0 4px 4px 0;
-        }
-        
-        .adjustment-info {
-            background-color: #fff8e1;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 0 4px 4px 0;
         }
     </style>
 </head>
@@ -236,15 +162,6 @@
             <input type="date" id="target-date">
         </div>
         
-        <div class="adjustment-info">
-            <strong>Ketentuan Penyesuaian Masa Kerja:</strong>
-            <ul>
-                <li>Jika golongan awal I (I/a s.d I/d), masa kerja dikurangi 6 TAHUN</li>
-                <li>Jika golongan awal II (II/a s.d II/d), masa kerja dikurangi 5 TAHUN</li>
-                <li>Golongan III dan IV menggunakan perhitungan normal (tidak ada pengurangan)</li>
-            </ul>
-        </div>
-        
         <h3>Periode Masa Kerja Tambahan</h3>
         <div id="period-container">
             <!-- Periode akan ditambahkan di sini -->
@@ -260,6 +177,9 @@
     </div>
 
     <script>
+        // URL Google Apps Script (GANTI DENGAN URL ANDA)
+        const API_URL = "https://script.google.com/macros/s/AKfycbwR2PY5nfvfemdBJrAcJjbDoEA8FSxLaRl4bX0nrnBKemu7H9saCLAy8Nyq-gexyswh/exec";
+
         document.addEventListener('DOMContentLoaded', function() {
             // Set tanggal target default ke hari ini
             const today = new Date();
@@ -321,7 +241,7 @@
             });
             
             // Hitung masa kerja
-            calculateBtn.addEventListener('click', function() {
+            calculateBtn.addEventListener('click', async function() {
                 const nama = document.getElementById('nama').value;
                 const tmtCpns = document.getElementById('tmt-cpns').value;
                 const masaKerjaAwalTahun = parseInt(document.getElementById('masa-kerja-awal-tahun').value) || 0;
@@ -339,7 +259,7 @@
                     return;
                 }
                 
-                // Hitung masa kerja dari TMT CPNS sampai tanggal target
+                // Hitung masa kerja
                 const tmtDate = new Date(tmtCpns);
                 const target = new Date(targetDate);
                 
@@ -353,7 +273,7 @@
                 totalMonths += masaKerjaAwalTahun * 12;
                 totalMonths += masaKerjaAwalBulan;
                 
-                // Hitung masa kerja dari periode tambahan
+                // Hitung periode tambahan
                 const periods = [];
                 const periodEntries = document.querySelectorAll('.period-entry');
                 
@@ -383,10 +303,6 @@
                     }
                 });
                 
-                // Konversi total bulan ke tahun dan bulan
-                const totalYears = Math.floor(totalMonths / 12);
-                const remainingMonths = totalMonths % 12;
-                
                 // Penyesuaian berdasarkan golongan awal (dalam TAHUN)
                 let adjustmentYears = 0;
                 let adjustmentNote = "";
@@ -402,6 +318,9 @@
                 const adjustmentMonths = adjustmentYears * 12;
                 const adjustedMonths = Math.max(0, totalMonths - adjustmentMonths);
                 
+                // Konversi ke tahun-bulan
+                const totalYears = Math.floor(totalMonths / 12);
+                const remainingMonths = totalMonths % 12;
                 const adjustedYears = Math.floor(adjustedMonths / 12);
                 const adjustedRemainingMonths = adjustedMonths % 12;
                 
@@ -411,58 +330,66 @@
                     <p><strong>TMT CPNS:</strong> ${formatDate(tmtCpns)}</p>
                     <p><strong>Golongan Awal:</strong> ${golonganAwal}</p>
                     <p><strong>Masa Kerja Awal:</strong> ${masaKerjaAwalTahun} tahun ${masaKerjaAwalBulan} bulan</p>
-                    <p><strong>Tanggal Target Perhitungan:</strong> ${formatDate(targetDate)}</p>
+                    <p><strong>Tanggal Target:</strong> ${formatDate(targetDate)}</p>
                     
-                    <div class="highlight">
-                        <p>Total Masa Kerja Sebelum Penyesuaian: ${totalYears} tahun ${remainingMonths} bulan</p>
-                        <p>Total Masa Kerja Setelah Penyesuaian: ${adjustedYears} tahun ${adjustedRemainingMonths} bulan${adjustmentNote}</p>
+                    <div style="background:#eaf2f8; padding:10px; border-radius:4px;">
+                        <p><strong>Total Sebelum Penyesuaian:</strong> ${totalYears} tahun ${remainingMonths} bulan</p>
+                        <p><strong>Total Setelah Penyesuaian:</strong> ${adjustedYears} tahun ${adjustedRemainingMonths} bulan${adjustmentNote}</p>
                     </div>
                 `;
                 
                 if (periods.length > 0) {
-                    resultHTML += `
-                        <h4>Detail Periode Tambahan:</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Mulai</th>
-                                    <th>Selesai</th>
-                                    <th>Golongan</th>
-                                    <th>Durasi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
-                    
-                    periods.forEach((period, index) => {
+                    resultHTML += `<h4>Detail Periode Tambahan:</h4><ul>`;
+                    periods.forEach(period => {
                         const years = Math.floor(period.months / 12);
                         const months = period.months % 12;
                         resultHTML += `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${formatDate(period.start)}</td>
-                                <td>${formatDate(period.end)}</td>
-                                <td>${period.golongan}</td>
-                                <td>${years > 0 ? years + ' tahun ' : ''}${months} bulan</td>
-                            </tr>
+                            <li>
+                                ${formatDate(period.start)} - ${formatDate(period.end)} 
+                                (Gol. ${period.golongan}): ${years}t ${months}b
+                            </li>
                         `;
                     });
-                    
-                    resultHTML += `
-                            </tbody>
-                        </table>
-                    `;
+                    resultHTML += `</ul>`;
                 }
                 
                 document.getElementById('result-content').innerHTML = resultHTML;
                 resultDiv.style.display = 'block';
                 
-                // Scroll ke hasil
-                resultDiv.scrollIntoView({ behavior: 'smooth' });
+                // Simpan ke Google Spreadsheet
+                await saveToGoogleSheet({
+                    nama: nama,
+                    tmtCpns: tmtCpns,
+                    golonganAwal: golonganAwal,
+                    masaKerjaAwalTahun: masaKerjaAwalTahun,
+                    masaKerjaAwalBulan: masaKerjaAwalBulan,
+                    targetDate: targetDate,
+                    totalYears: totalYears,
+                    totalMonths: remainingMonths,
+                    adjustedYears: adjustedYears,
+                    adjustedMonths: adjustedRemainingMonths,
+                    periods: periods
+                });
             });
             
-            // Fungsi untuk memformat tanggal
+            // Fungsi untuk menyimpan ke Google Spreadsheet
+            async function saveToGoogleSheet(data) {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    console.log('Data tersimpan!');
+                } catch (error) {
+                    console.error('Gagal menyimpan:', error);
+                }
+            }
+            
+            // Fungsi format tanggal
             function formatDate(dateString) {
                 if (!dateString) return '-';
                 const date = new Date(dateString);
@@ -473,37 +400,6 @@
                 });
             }
         });
-        // URL Web App Anda (GANTI_DENGAN_URL_ANDA)
-const API_URL = "https://script.google.com/macros/s/AKfycbwR2PY5nfvfemdBJrAcJjbDoEA8FSxLaRl4bX0nrnBKemu7H9saCLAy8Nyq-gexyswh/exec";
-
-// Fungsi untuk mengirim data ke Spreadsheet
-async function saveToGoogleSheet(data) {
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    console.log("Data tersimpan!");
-  } catch (error) {
-    console.error("Gagal menyimpan:", error);
-  }
-}
-
-// Dalam fungsi calculateBtn.addEventListener('click'), tambahkan:
-saveToGoogleSheet({
-  nama: nama,
-  tmtCpns: tmtCpns,
-  golonganAwal: golonganAwal,
-  masaKerjaAwalTahun: masaKerjaAwalTahun,
-  masaKerjaAwalBulan: masaKerjaAwalBulan,
-  targetDate: targetDate,
-  totalYears: totalYears,
-  totalMonths: remainingMonths,
-  adjustedYears: adjustedYears,
-  adjustedMonths: adjustedRemainingMonths,
-  periods: periods
-});
     </script>
 </body>
 </html>
