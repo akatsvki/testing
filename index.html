@@ -473,26 +473,25 @@
                 });
             }
         });
-        // Ganti YOUR_SCRIPT_URL dengan URL dari Langkah 5
-const API_URL = "https://script.google.com/macros/s/AKfycbywSp8_hiNbJDcTKpQo9l_5pfPsd1MqGdN84b2AMoevPR2Z7KtRofdlF5rj6uYrewFa/exec";
+        // URL Web App Anda (GANTI_DENGAN_URL_ANDA)
+const API_URL = "https://script.google.com/macros/s/AKfycbwR2PY5nfvfemdBJrAcJjbDoEA8FSxLaRl4bX0nrnBKemu7H9saCLAy8Nyq-gexyswh/exec";
 
-async function saveToSheet(data) {
+// Fungsi untuk mengirim data ke Spreadsheet
+async function saveToGoogleSheet(data) {
   try {
     const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
-    
-    if (!response.ok) throw new Error('Gagal menyimpan');
-    console.log('Data tersimpan!');
+    console.log("Data tersimpan!");
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Gagal menyimpan:", error);
   }
 }
 
 // Dalam fungsi calculateBtn.addEventListener('click'), tambahkan:
-saveToSheet({
+saveToGoogleSheet({
   nama: nama,
   tmtCpns: tmtCpns,
   golonganAwal: golonganAwal,
