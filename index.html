@@ -105,27 +105,6 @@
             position: relative;
             animation: fadeIn 0.5s ease-out;
         }
-         /* TAMBAHKAN INI */
-        .btn-refresh {
-            background-color: #f39c12;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-            font-weight: bold;
-        }
-        .btn-refresh:hover {
-            background-color: #e67e22;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
@@ -188,11 +167,8 @@
             <!-- Periode akan ditambahkan di sini -->
         </div>
         
-      <div class="button-group">
         <button type="button" id="add-period">➕ Tambah Periode</button>
         <button type="button" id="calculate">🔍 Hitung Masa Kerja</button>
-        <button type="button" id="refresh" class="btn-refresh">🔄 Refresh</button>
-    </div>
     </div>
     
     <div id="result" class="result" style="display: none;">
@@ -201,8 +177,6 @@
     </div>
 
     <script>
-         document.addEventListener('DOMContentLoaded', function() {
-             
         // URL Google Apps Script (GANTI DENGAN URL ANDA)
         const API_URL = "https://script.google.com/macros/s/AKfycbwR2PY5nfvfemdBJrAcJjbDoEA8FSxLaRl4bX0nrnBKemu7H9saCLAy8Nyq-gexyswh/exec";
 
@@ -426,26 +400,6 @@
                 });
             }
         });
-                document.getElementById('refresh').addEventListener('click', function() {
-            // Reset form utama
-            document.getElementById('nama').value = '';
-            document.getElementById('tmt-cpns').value = '';
-            document.getElementById('masa-kerja-awal-tahun').value = '0';
-            document.getElementById('masa-kerja-awal-bulan').value = '0';
-            document.getElementById('golongan-awal').value = 'I/a';
-            document.getElementById('target-date').valueAsDate = new Date();
-            
-            // Reset periode tambahan
-            document.getElementById('period-container').innerHTML = '';
-            periodCount = 0;
-            
-            // Sembunyikan hasil
-            document.getElementById('result').style.display = 'none';
-            
-            // Fokus ke input pertama
-            document.getElementById('nama').focus();
-        });
-    });
     </script>
 </body>
 </html>
