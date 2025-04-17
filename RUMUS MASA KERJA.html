@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perhitungan Masa Kerja PNS by Adib (BKD Sidoarjo)</title>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes colorChange {
+            0% { color: #2c3e50; }
+            50% { color: #3498db; }
+            100% { color: #2c3e50; }
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f7fa;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            animation: colorChange 5s infinite;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            margin-top: 5px;
+            font-weight: normal;
+            opacity: 0.9;
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        input[type="date"], input[type="number"], input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 15px;
+            transition: border 0.3s;
+        }
+        
+        input[type="date"]:focus, input[type="number"]:focus, input[type="text"]:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .period-entry {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            position: relative;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .remove-period {
+            background-color: #e74c3c;
+            margin-left: 10px;
+            padding: 8px 15px;
+        }
+        
+        .remove-period:hover {
+            background-color: #c0392b;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .highlight {
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: bold;
+            background-color: #eaf2f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        .info-box {
+            background-color: #eaf2f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .adjustment-info {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Perhitungan Masa Kerja PNS</h1>
+        <div class="subtitle">by Adib (BKD Sidoarjo)</div>
+    </div>
+    
+    <div class="form-container">
+        <div class="form-group">
+            <label for="nama">Nama PNS:</label>
+            <input type="text" id="nama" placeholder="Masukkan nama PNS">
+        </div>
+        
+        <div class="form-group">
+            <label for="tmt-cpns">TMT CPNS:</label>
+            <input type="date" id="tmt-cpns">
+        </div>
+        
+        <div class="form-group">
+            <label for="masa-kerja-awal-tahun">Masa Kerja Awal (Tahun):</label>
+            <input type="number" id="masa-kerja-awal-tahun" min="0" value="0">
+        </div>
+        
+        <div class="form-group">
+            <label for="masa-kerja-awal-bulan">Masa Kerja Awal (Bulan):</label>
+            <input type="number" id="masa-kerja-awal-bulan" min="0" max="11" value="0">
+        </div>
+        
+        <div class="form-group">
+            <label for="golongan-awal">Golongan Ruang Awal:</label>
+            <select id="golongan-awal">
+                <option value="I/a">I/a</option>
+                <option value="I/b">I/b</option>
+                <option value="I/c">I/c</option>
+                <option value="I/d">I/d</option>
+                <option value="II/a">II/a</option>
+                <option value="II/b">II/b</option>
+                <option value="II/c">II/c</option>
+                <option value="II/d">II/d</option>
+                <option value="III/a">III/a</option>
+                <option value="III/b">III/b</option>
+                <option value="III/c">III/c</option>
+                <option value="III/d">III/d</option>
+                <option value="IV/a">IV/a</option>
+                <option value="IV/b">IV/b</option>
+                <option value="IV/c">IV/c</option>
+                <option value="IV/d">IV/d</option>
+                <option value="IV/e">IV/e</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="target-date">Tanggal Target Perhitungan:</label>
+            <input type="date" id="target-date">
+        </div>
+        
+        <div class="adjustment-info">
+            <strong>Ketentuan Penyesuaian Masa Kerja:</strong>
+            <ul>
+                <li>Jika golongan awal I (I/a s.d I/d), masa kerja dikurangi 6 TAHUN</li>
+                <li>Jika golongan awal II (II/a s.d II/d), masa kerja dikurangi 5 TAHUN</li>
+                <li>Golongan III dan IV menggunakan perhitungan normal (tidak ada pengurangan)</li>
+            </ul>
+        </div>
+        
+        <h3>Periode Masa Kerja Tambahan</h3>
+        <div id="period-container">
+            <!-- Periode akan ditambahkan di sini -->
+        </div>
+        
+        <button type="button" id="add-period">➕ Tambah Periode</button>
+        <button type="button" id="calculate">🔍 Hitung Masa Kerja</button>
+    </div>
+    
+    <div id="result" class="result" style="display: none;">
+        <h3>Hasil Perhitungan</h3>
+        <div id="result-content"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set tanggal target default ke hari ini
+            const today = new Date();
+            document.getElementById('target-date').valueAsDate = today;
+            
+            const periodContainer = document.getElementById('period-container');
+            const addPeriodBtn = document.getElementById('add-period');
+            const calculateBtn = document.getElementById('calculate');
+            const resultDiv = document.getElementById('result');
+            
+            let periodCount = 0;
+            
+            // Tambah periode baru
+            addPeriodBtn.addEventListener('click', function() {
+                periodCount++;
+                const periodDiv = document.createElement('div');
+                periodDiv.className = 'period-entry';
+                periodDiv.innerHTML = `
+                    <h4>Periode ${periodCount}</h4>
+                    <div class="form-group">
+                        <label for="period-start-${periodCount}">Mulai:</label>
+                        <input type="date" id="period-start-${periodCount}">
+                    </div>
+                    <div class="form-group">
+                        <label for="period-end-${periodCount}">Selesai:</label>
+                        <input type="date" id="period-end-${periodCount}">
+                    </div>
+                    <div class="form-group">
+                        <label for="period-golongan-${periodCount}">Golongan Ruang:</label>
+                        <select id="period-golongan-${periodCount}">
+                            <option value="I/a">I/a</option>
+                            <option value="I/b">I/b</option>
+                            <option value="I/c">I/c</option>
+                            <option value="I/d">I/d</option>
+                            <option value="II/a">II/a</option>
+                            <option value="II/b">II/b</option>
+                            <option value="II/c">II/c</option>
+                            <option value="II/d">II/d</option>
+                            <option value="III/a">III/a</option>
+                            <option value="III/b">III/b</option>
+                            <option value="III/c">III/c</option>
+                            <option value="III/d">III/d</option>
+                            <option value="IV/a">IV/a</option>
+                            <option value="IV/b">IV/b</option>
+                            <option value="IV/c">IV/c</option>
+                            <option value="IV/d">IV/d</option>
+                            <option value="IV/e">IV/e</option>
+                        </select>
+                    </div>
+                    <button type="button" class="remove-period">🗑️ Hapus Periode</button>
+                `;
+                periodContainer.appendChild(periodDiv);
+                
+                // Tambah event listener untuk tombol hapus
+                periodDiv.querySelector('.remove-period').addEventListener('click', function() {
+                    periodContainer.removeChild(periodDiv);
+                    periodCount--;
+                });
+            });
+            
+            // Hitung masa kerja
+            calculateBtn.addEventListener('click', function() {
+                const nama = document.getElementById('nama').value;
+                const tmtCpns = document.getElementById('tmt-cpns').value;
+                const masaKerjaAwalTahun = parseInt(document.getElementById('masa-kerja-awal-tahun').value) || 0;
+                const masaKerjaAwalBulan = parseInt(document.getElementById('masa-kerja-awal-bulan').value) || 0;
+                const golonganAwal = document.getElementById('golongan-awal').value;
+                const targetDate = document.getElementById('target-date').value;
+                
+                if (!tmtCpns) {
+                    alert('Silakan masukkan TMT CPNS');
+                    return;
+                }
+                
+                if (!targetDate) {
+                    alert('Silakan masukkan Tanggal Target Perhitungan');
+                    return;
+                }
+                
+                // Hitung masa kerja dari TMT CPNS sampai tanggal target
+                const tmtDate = new Date(tmtCpns);
+                const target = new Date(targetDate);
+                
+                let totalMonths = (target.getFullYear() - tmtDate.getFullYear()) * 12;
+                totalMonths += target.getMonth() - tmtDate.getMonth();
+                if (target.getDate() < tmtDate.getDate()) {
+                    totalMonths--;
+                }
+                
+                // Tambahkan masa kerja awal
+                totalMonths += masaKerjaAwalTahun * 12;
+                totalMonths += masaKerjaAwalBulan;
+                
+                // Hitung masa kerja dari periode tambahan
+                const periods = [];
+                const periodEntries = document.querySelectorAll('.period-entry');
+                
+                periodEntries.forEach((entry, index) => {
+                    const start = entry.querySelector(`#period-start-${index+1}`).value;
+                    const end = entry.querySelector(`#period-end-${index+1}`).value;
+                    const golongan = entry.querySelector(`#period-golongan-${index+1}`).value;
+                    
+                    if (start && end) {
+                        const startDate = new Date(start);
+                        const endDate = new Date(end);
+                        
+                        let periodMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+                        periodMonths += endDate.getMonth() - startDate.getMonth();
+                        if (endDate.getDate() < startDate.getDate()) {
+                            periodMonths--;
+                        }
+                        
+                        periods.push({
+                            start: start,
+                            end: end,
+                            golongan: golongan,
+                            months: periodMonths
+                        });
+                        
+                        totalMonths += periodMonths;
+                    }
+                });
+                
+                // Konversi total bulan ke tahun dan bulan
+                const totalYears = Math.floor(totalMonths / 12);
+                const remainingMonths = totalMonths % 12;
+                
+                // Penyesuaian berdasarkan golongan awal (dalam TAHUN)
+                let adjustmentYears = 0;
+                let adjustmentNote = "";
+                
+                if (golonganAwal.startsWith("I/")) {
+                    adjustmentYears = 6;
+                    adjustmentNote = " (Penyesuaian golongan I dikurangi 6 TAHUN)";
+                } else if (golonganAwal.startsWith("II/")) {
+                    adjustmentYears = 5;
+                    adjustmentNote = " (Penyesuaian golongan II dikurangi 5 TAHUN)";
+                }
+                
+                const adjustmentMonths = adjustmentYears * 12;
+                const adjustedMonths = Math.max(0, totalMonths - adjustmentMonths);
+                
+                const adjustedYears = Math.floor(adjustedMonths / 12);
+                const adjustedRemainingMonths = adjustedMonths % 12;
+                
+                // Tampilkan hasil
+                let resultHTML = `
+                    <p><strong>Nama:</strong> ${nama || '-'}</p>
+                    <p><strong>TMT CPNS:</strong> ${formatDate(tmtCpns)}</p>
+                    <p><strong>Golongan Awal:</strong> ${golonganAwal}</p>
+                    <p><strong>Masa Kerja Awal:</strong> ${masaKerjaAwalTahun} tahun ${masaKerjaAwalBulan} bulan</p>
+                    <p><strong>Tanggal Target Perhitungan:</strong> ${formatDate(targetDate)}</p>
+                    
+                    <div class="highlight">
+                        <p>Total Masa Kerja Sebelum Penyesuaian: ${totalYears} tahun ${remainingMonths} bulan</p>
+                        <p>Total Masa Kerja Setelah Penyesuaian: ${adjustedYears} tahun ${adjustedRemainingMonths} bulan${adjustmentNote}</p>
+                    </div>
+                `;
+                
+                if (periods.length > 0) {
+                    resultHTML += `
+                        <h4>Detail Periode Tambahan:</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Mulai</th>
+                                    <th>Selesai</th>
+                                    <th>Golongan</th>
+                                    <th>Durasi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
+                    periods.forEach((period, index) => {
+                        const years = Math.floor(period.months / 12);
+                        const months = period.months % 12;
+                        resultHTML += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${formatDate(period.start)}</td>
+                                <td>${formatDate(period.end)}</td>
+                                <td>${period.golongan}</td>
+                                <td>${years > 0 ? years + ' tahun ' : ''}${months} bulan</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    resultHTML += `
+                            </tbody>
+                        </table>
+                    `;
+                }
+                
+                document.getElementById('result-content').innerHTML = resultHTML;
+                resultDiv.style.display = 'block';
+                
+                // Scroll ke hasil
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Fungsi untuk memformat tanggal
+            function formatDate(dateString) {
+                if (!dateString) return '-';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+        });
+    </script>
+<script>
+  // URL Google Apps Script Web App
+  const API_URL = "https://script.google.com/macros/library/d/1EWfzBO4gSYVIfHbAclzeh71fA12pcRwTxn3TVEOFGI5cfyb_dlsna0Rx/1";
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // ... kode yang ada sebelumnya ...
+    
+    calculateBtn.addEventListener('click', function() {
+      // ... kode perhitungan yang ada sebelumnya ...
+      
+      // Setelah perhitungan selesai, simpan ke spreadsheet
+      saveToDatabase({
+        nama: nama || '-',
+        tmtCpns: formatDate(tmtCpns),
+        golonganAwal: golonganAwal,
+        masaKerjaAwalTahun: masaKerjaAwalTahun,
+        masaKerjaAwalBulan: masaKerjaAwalBulan,
+        targetDate: formatDate(targetDate),
+        totalYears: totalYears,
+        remainingMonths: remainingMonths,
+        adjustedYears: adjustedYears,
+        adjustedRemainingMonths: adjustedRemainingMonths,
+        periods: periods
+      });
+    });
+    
+    // Fungsi untuk menyimpan data ke Google Spreadsheet
+    async function saveToDatabase(data) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+          alert('Data berhasil disimpan ke database');
+        } else {
+          console.error('Gagal menyimpan data:', result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat menyimpan data');
+      }
+    }
+    
+    // ... fungsi lainnya ...
+  });
+</script>
+</body>
+</html>
