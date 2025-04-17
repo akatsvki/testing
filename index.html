@@ -473,56 +473,38 @@
                 });
             }
         });
-    </script>
-<script>
-  // URL Google Apps Script Web App - HARAP DIGANTI
-  const API_URL = "https://script.google.com/macros/library/d/1EWfzBO4gSYVIfHbAclzeh71fA12pcRwTxn3TVEOFGI5cfyb_dlsna0Rx/1";
+        // Ganti YOUR_SCRIPT_URL dengan URL dari Langkah 5
+const API_URL = "https://script.google.com/macros/s/AKfycbywSp8_hiNbJDcTKpQo9l_5pfPsd1MqGdN84b2AMoevPR2Z7KtRofdlF5rj6uYrewFa/exec";
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // ... [seluruh kode asal Anda tetap dipertahankan] ...
-    
-    calculateBtn.addEventListener('click', function() {
-      // ... [perhitungan masa kerja seperti biasa] ...
-      
-      // KODE BARU - Kirim ke spreadsheet
-      saveToDatabase({
-        nama: nama || '-',
-        tmtCpns: tmtCpns,
-        golonganAwal: golonganAwal,
-        masaKerjaAwalTahun: masaKerjaAwalTahun,
-        masaKerjaAwalBulan: masaKerjaAwalBulan,
-        targetDate: targetDate,
-        totalYears: totalYears,
-        remainingMonths: remainingMonths,
-        adjustedYears: adjustedYears,
-        adjustedRemainingMonths: adjustedRemainingMonths,
-        periods: periods
-      });
-      
-      // Tampilkan hasil seperti biasa
-      document.getElementById('result-content').innerHTML = resultHTML;
-      resultDiv.style.display = 'block';
+async function saveToSheet(data) {
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
-
-    // FUNGSI BARU - Untuk menyimpan data
-    async function saveToDatabase(data) {
-      try {
-        await fetch(API_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-        console.log('Data tersimpan!');
-      } catch (error) {
-        console.error('Gagal menyimpan:', error);
-      }
-    }
     
-    // ... [fungsi formatDate dan lainnya] ...
-  });
-</script>
+    if (!response.ok) throw new Error('Gagal menyimpan');
+    console.log('Data tersimpan!');
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+// Dalam fungsi calculateBtn.addEventListener('click'), tambahkan:
+saveToSheet({
+  nama: nama,
+  tmtCpns: tmtCpns,
+  golonganAwal: golonganAwal,
+  masaKerjaAwalTahun: masaKerjaAwalTahun,
+  masaKerjaAwalBulan: masaKerjaAwalBulan,
+  targetDate: targetDate,
+  totalYears: totalYears,
+  totalMonths: remainingMonths,
+  adjustedYears: adjustedYears,
+  adjustedMonths: adjustedRemainingMonths,
+  periods: periods
+});
+    </script>
 </body>
 </html>
